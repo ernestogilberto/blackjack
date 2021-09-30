@@ -1,3 +1,5 @@
+import {addElement, addBtn, destructor} from "./constructors.js";
+
 let deck = []
 const btnHit = document.querySelector('.btn-hit')
 const btnStand = document.querySelector('.btn-stand')
@@ -35,7 +37,7 @@ const createDeck = () =>{
 const showCard = (currentCard, owner) => {
     const card = document.createElement('img')
     card.classList.add('played-card')
-    card.src = `./assets/cards/${currentCard}.png`
+    card.src = `./assets/cards/${currentCard}.svg`
 
     owner === 'player'? playerCardsContainer.appendChild(card) : houseCardsContainer.appendChild(card)
 }
@@ -54,11 +56,11 @@ const cardValue = (card) => {
     return (isNaN(value)? (value === 'A'? 11 : 10): parseInt(value))
 }
 
-const destructor = (father) => {
-    while (father.firstChild) {
-        father.removeChild(father.firstChild)
-    }
-}
+// const destructor = (father) => {
+//     while (father.firstChild) {
+//         father.removeChild(father.firstChild)
+//     }
+// }
 
 btnHit.addEventListener('click', ()=> {
     const card = hit()
@@ -79,6 +81,7 @@ btnHit.addEventListener('click', ()=> {
 btnStand.addEventListener('click', ()=> {
 
     btnHit.disabled = true
+    btnStand.disabled = true
 
    do {
         const card = hit()
