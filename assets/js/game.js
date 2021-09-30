@@ -1,6 +1,7 @@
 let deck = []
 const btnHit = document.querySelector('.btn-hit')
 const btnStand = document.querySelector('.btn-stand')
+const btnNew = document.querySelector('.btn-new')
 const playerLabelPoints = document.querySelector('#player-points')
 const houseLabelPoints = document.querySelector('#house-points')
 const playerCardsContainer = document.querySelector('#player-cards')
@@ -53,6 +54,12 @@ const cardValue = (card) => {
     return (isNaN(value)? (value === 'A'? 11 : 10): parseInt(value))
 }
 
+const destructor = (father) => {
+    while (father.firstChild) {
+        father.removeChild(father.firstChild)
+    }
+}
+
 btnHit.addEventListener('click', ()=> {
     const card = hit()
     playerPoints += cardValue(card)
@@ -73,15 +80,35 @@ btnStand.addEventListener('click', ()=> {
 
     btnHit.disabled = true
 
-    while (housePoints < playerPoints){
+   do {
         const card = hit()
         housePoints += cardValue(card)
         houseLabelPoints.innerText = housePoints
-
         showCard(card, 'house')
-    }
+       if (playerPoints > 21){
+           break
+       }
+    }  while (housePoints < playerPoints && housePoints <= 21)
 
 housePoints <= 21 ? console.log("Gana la casa") : console.log("Ganaste!!!")
+})
+
+btnNew.addEventListener('click', ()=> {
+
+    destructor(playerCardsContainer)
+    destructor(houseCardsContainer)
+
+
+    btnHit.disabled = false
+    btnStand.disabled = false
+
+    playerPoints = 0
+    housePoints = 0
+
+    houseLabelPoints.innerText = housePoints
+    playerLabelPoints.innerText = playerPoints
+
+    createDeck()
 })
 
 createDeck()
