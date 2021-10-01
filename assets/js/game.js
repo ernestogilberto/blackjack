@@ -1,6 +1,7 @@
-import {addElement, addBtn, destructor} from "./constructors.js";
+import {destructor} from "./constructors.js";
 
 let deck = []
+let currentCards = []
 const btnHit = document.querySelector('.btn-hit')
 const btnStand = document.querySelector('.btn-stand')
 const btnNew = document.querySelector('.btn-new')
@@ -47,7 +48,6 @@ const hit = () => {
     if(deck.length === 0){
         throw 'no hay cartas en el deck'
     }
-
     return deck.pop()
 }
 
@@ -56,18 +56,19 @@ const cardValue = (card) => {
     return (isNaN(value)? (value === 'A'? 11 : 10): parseInt(value))
 }
 
-// const destructor = (father) => {
-//     while (father.firstChild) {
-//         father.removeChild(father.firstChild)
-//     }
-// }
-
 btnHit.addEventListener('click', ()=> {
     const card = hit()
+    currentCards.push(cardValue(card))
     playerPoints += cardValue(card)
     playerLabelPoints.innerText = playerPoints
 
     showCard(card, 'player')
+
+    if(playerPoints > 21 && currentCards.indexOf(11) >= 0 ){
+        currentCards[currentCards.indexOf(11)] = 1
+        playerPoints -= 10
+        playerLabelPoints.innerText = playerPoints
+    }
 
     if (playerPoints > 21){
         console.log("Perdiste")
@@ -101,7 +102,7 @@ btnNew.addEventListener('click', ()=> {
     destructor(playerCardsContainer)
     destructor(houseCardsContainer)
 
-
+    currentCards = []
     btnHit.disabled = false
     btnStand.disabled = false
 
@@ -115,7 +116,3 @@ btnNew.addEventListener('click', ()=> {
 })
 
 createDeck()
-
-console.log(cardValue('JS'))
-
-console.log(deck)
