@@ -111,8 +111,6 @@ btnNew.addEventListener('click', ()=> {
 
     houseLabelPoints.innerText = housePoints
     playerLabelPoints.innerText = playerPoints
-
-    createDeck()
 })
 
 createDeck()
