@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Esmeralda",
+    "money": 100,
+    "partidas": 20,
+    "ganadas": 11,
+    "perdidas": 5,
+    "empatadas": 4
+  },
+  {
+    "name": "Gilberto",
+    "money": 220,
+    "partidas": 17,
+    "ganadas": 10,
+    "perdidas": 4,
+    "empatadas": 3
+  },
+  {
+    "name": "Alfredo",
+    "money": 54,
+    "partidas": 8,
+    "ganadas": 2,
+    "perdidas": 5,
+    "empatadas": 1
+  }
+]

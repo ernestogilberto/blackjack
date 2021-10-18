@@ -1,28 +1,38 @@
-import {destructor} from "./constructors.js";
-
 let deck = []
+const URLPLAYERS = "./data/players.json"
+
 let currentCards = []
-const btnHit = document.querySelector('.btn-hit')
-const btnStand = document.querySelector('.btn-stand')
-const btnNew = document.querySelector('.btn-new')
-const playerLabelPoints = document.querySelector('#player-points')
-const houseLabelPoints = document.querySelector('#house-points')
-const playerCardsContainer = document.querySelector('#player-cards')
-const houseCardsContainer = document.querySelector('#house-cards')
 let playerPoints = 0
 let housePoints = 0
+let betAmount = 10
+let currentPlayer
+let currentPlayerData
 
-const createDeck = () =>{
+const getData = () => {
+    $.getJSON(URLPLAYERS, function (respuesta, estado) {
+        if (estado === "success") {
+            for (const player of respuesta) {
+                if (player.name === currentPlayer) {
+                    $("#player-name").text(`${player.name} - `).append('<small id="player-points">0</small>')
+                    $("#player-money").text(player.money)
+                    currentPlayerData = player
+                }
+            }
+        }
+    })
+}
+
+const createDeck = () => {
     const types = ['C', 'D', 'H', 'S']
     const figures = ['A', 'J', 'Q', 'K']
-    for(let i = 2; i <= 10; i++){
+    for (let i = 2; i <= 10; i++) {
         for (let type of types) {
             deck.push(i + type)
         }
     }
 
-    for (let figure of figures){
-        for (let type of types){
+    for (let figure of figures) {
+        for (let type of types) {
             deck.push(figure + type)
         }
     }
@@ -36,81 +46,124 @@ const createDeck = () =>{
 }
 
 const showCard = (currentCard, owner) => {
-    const card = document.createElement('img')
-    card.classList.add('played-card')
-    card.src = `./assets/cards/${currentCard}.svg`
-
-    owner === 'player'? playerCardsContainer.appendChild(card) : houseCardsContainer.appendChild(card)
+    owner === 'player' ? $("#player-cards").append(`<img alt=card src=\./assets/cards/${currentCard}.svg\ class=played-card>`).fadeIn() : $("#house-cards").append(`<img alt=card src=\./assets/cards/${currentCard}.svg\ class=played-card>`)
 }
 
 
 const hit = () => {
-    if(deck.length === 0){
+    if (deck.length === 0) {
         throw 'no hay cartas en el deck'
     }
     return deck.pop()
 }
 
 const cardValue = (card) => {
-    const value = card.substring(0, card.length -1)
-    return (isNaN(value)? (value === 'A'? 11 : 10): parseInt(value))
+    const value = card.substring(0, card.length - 1)
+    return (isNaN(value) ? (value === 'A' ? 11 : 10) : parseInt(value))
 }
 
-btnHit.addEventListener('click', ()=> {
+$(".btn-hit").on('click', () => {
     const card = hit()
     currentCards.push(cardValue(card))
     playerPoints += cardValue(card)
-    playerLabelPoints.innerText = playerPoints
+    $("#player-points").text(playerPoints)
 
     showCard(card, 'player')
 
-    if(playerPoints > 21 && currentCards.indexOf(11) >= 0 ){
+    if (playerPoints > 21 && currentCards.indexOf(11) >= 0) {
         currentCards[currentCards.indexOf(11)] = 1
         playerPoints -= 10
-        playerLabelPoints.innerText = playerPoints
+        $("#player-points").text(playerPoints)
     }
 
-    if (playerPoints > 21){
-        console.log("Perdiste")
-        btnHit.disabled = true
-    } else if (playerPoints === 21){
-        console.log("21, Ganaste!!!")
-        btnHit.disabled = true
+    if (playerPoints > 21) {
+        $("#result").text("La casa gana")
+        currentPlayerData.money -= betAmount
+        $("#player-money").text(currentPlayerData.money)
+        $(".btn-hit").prop('disabled', true)
+        $(".btn-stand").prop('disabled', true)
+    } else if (playerPoints === 21) {
+        $("#result").text("Ganaste")
+        currentPlayerData.money += betAmount * 2
+        $("#player-money").text(currentPlayerData.money)
+        $(".btn-hit").prop('disabled', true)
+        $(".btn-stand").prop('disabled', true)
     }
 })
 
-btnStand.addEventListener('click', ()=> {
+$(".btn-stand").on('click', () => {
 
-    btnHit.disabled = true
-    btnStand.disabled = true
+    $(".btn-hit").prop('disabled', true)
+    $(".btn-stand").prop('disabled', true)
 
-   do {
+    do {
         const card = hit()
         housePoints += cardValue(card)
-        houseLabelPoints.innerText = housePoints
+        $("#house-points").text(housePoints)
         showCard(card, 'house')
-       if (playerPoints > 21){
-           break
-       }
-    }  while (housePoints < playerPoints && housePoints <= 21)
+        if (playerPoints > 21) {
+            break
+        }
+    } while (housePoints < playerPoints && housePoints <= 21)
 
-housePoints <= 21 ? console.log("Gana la casa") : console.log("Ganaste!!!")
+    if (housePoints <= 21) {
+        $("#result").text("La casa gana")
+        currentPlayerData.money -= betAmount
+        $("#player-money").text(currentPlayerData.money)
+
+    } else {
+        $("#result").text("Ganaste")
+        currentPlayerData.money += betAmount * 2
+        $("#player-money").text(currentPlayerData.money)
+    }
 })
 
-btnNew.addEventListener('click', ()=> {
+$(".btn-new").on('click', () => {
 
-    destructor(playerCardsContainer)
-    destructor(houseCardsContainer)
+    $("#player-cards").empty()
+    $("#house-cards").empty()
 
     currentCards = []
-    btnHit.disabled = false
-    btnStand.disabled = false
+    $(".btn-hit").prop('disabled', false)
+    $(".btn-stand").prop('disabled', false)
 
     playerPoints = 0
     housePoints = 0
 
-    houseLabelPoints.innerText = housePoints
-    playerLabelPoints.innerText = playerPoints
+    $("#house-points").text(housePoints)
+    $("#player-points").text(playerPoints)
+})
+
+$(".btn-bet").on('click', () => {
+    betAmount = $("#bet").val()
+
+    $(".btn-hit").prop('disabled', false)
+    $(".btn-stand").prop('disabled', false)
+    $(".btn-new").prop('disabled', false)
+    $(".btn-bet").prop('disabled', true)
+})
+
+$(".btn-player").on('click', () => {
+    currentPlayer = $("#player").val()
+    getData()
+    $(".btn-bet").prop('disabled', false)
+    $("#player-sel").hide()
+    $("#buttons").fadeIn("slow").slideDown("slow")
+})
+
+$(window).on("load", () => {
+    $("#buttons").hide()
+    $.getJSON(URLPLAYERS, function (respuesta, estado) {
+        if (estado === "success") {
+            let i = 0
+            for (const player of respuesta) {
+                i++
+                let text = player.name
+                $("#player").append(`<option value=${text.replace(/ /g, "-")} id=option${i}> </option>`)
+                $(`#option${i}`).text(text)
+            }
+        }
+    })
 })
 
 createDeck()

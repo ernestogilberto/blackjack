@@ -1,27 +1,34 @@
-html, body{
-    margin:0;
-    background-image: url('../background.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: white;
+html, body {
+    margin            : 0;
+    background-image  : url('../background.jpg');
+    background-repeat : no-repeat;
+    background-size   : cover;
+    color             : white;
 }
 
-.title{
-    text-align: center;
-    background-image: url('../background-2.jpg');
-    color: white;
-    padding: 20px;
-    font-size: 25px;
-    font-weight: bold;
+.title {
+    text-align       : center;
+    background-image : url('../background-2.jpg');
+    color            : white;
+    padding          : 20px;
+    font-size        : 25px;
+    font-weight      : bold;
 }
 
-.played-card{
-    position: relative;
-    width: 150px;
-    left: 100px;
-    margin-left: -75px;
+.played-card {
+    position    : relative;
+    width       : 150px;
+    left        : 100px;
+    margin-left : -75px;
 }
 
-#player-cards, #house-cards{
-    height: 250px;
+#player-cards, #house-cards {
+    height : 250px;
+}
+
+label {
+    margin-left  : 30px;
+    margin-right : 5px;
+    font-size    : 20px;
+    font-weight  : bold;
 }

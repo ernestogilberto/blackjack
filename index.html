@@ -14,29 +14,50 @@
     
     <header class="title">BlackJack</header>
     <div class="row mt-2">
-        <div class="col text-center">
-            <button class="btn-new btn btn-danger">New Game</button>
-            <button class="btn-hit btn btn-primary">Hit</button>
-            <button class="btn-stand btn btn-primary">Stand</button>
+        <div class="col text-center" id="player-sel">
+            <label for="player">Player</label>
+            <!--            <input id="player" name="player" type="list">-->
+            <select id="player" name="player">
+            
+            </select>
+            <button class="btn-player btn btn-primary" id="btn-player">Player</button>
+        
+        </div>
+        
+        <div class="col text-center" id="buttons">
+            <button class="btn-new btn btn-danger" disabled>New Game</button>
+            <button class="btn-hit btn btn-primary" disabled>Hit</button>
+            <button class="btn-stand btn btn-primary" disabled>Stand</button>
+            
+            <label for="bet">Bet</label>
+            <input id="bet" name="bet" type="number">
+            <button class="btn-bet btn btn-primary" disabled id="btn-bet">Bet</button>
+            
+            
+            <h1>Money: <small id="player-money">0</small></h1>
+        
         </div>
     
     </div>
     <div class="row container">
         <div class="col">
-            <h1>Player 1 - <small id ="player-points">0</small></h1>
+            <h1 id="player-name">Player 1 - <small id="player-points">0</small></h1>
             <div id="player-cards">
-
+            
             </div>
         </div>
     </div>
     <div class="row container mt-2">
         <div class="col">
-            <h1>House - <small id ="house-points">0</small></h1>
+            <h1>House - <small id="house-points">0</small></h1>
             <div id="house-cards">
-
+            
             </div>
         </div>
     </div>
+    
+    <h1 id="result"></h1>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="./assets/js/game.js" type="module"></script>
 </body>
 </html>
